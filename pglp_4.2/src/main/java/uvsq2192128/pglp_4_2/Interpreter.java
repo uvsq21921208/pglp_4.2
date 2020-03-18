@@ -10,12 +10,35 @@ public class Interpreter {
 		this.stack = stackArg;
 	}
 	
-	
+	public void interprete(String value) {
+		GenericCommand command;
+		switch(value) {
+		case "exit":
+			command = new Quit();
+		case "undo":
+			command = new Undo();
+			
+		command.execute();
+			
+		}
+	}
 	private class Quit implements GenericCommand{
+
+		@Override
+		public void execute() {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
     
 	private class Undo implements GenericCommand{
+
+		@Override
+		public void execute() {
+			// TODO Auto-generated method stub
+			
+		}
 		
 	}
 

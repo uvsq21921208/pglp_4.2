@@ -1,7 +1,6 @@
 package uvsq2192128.pglp_4_2;
 
 import java.util.Stack;
-import java.util.regex.Pattern;
 
 public class SaisieRPN {
     //here we create the stack and we send a reference to both classes of interpreter and
@@ -18,36 +17,41 @@ public class SaisieRPN {
 	}
    
 	
-	public void interectUserInput() throws OperationException {
+	public void interectUserInput() throws OperationException, MiniMumOperandNeeded {
 		UserDisplay display = new Display();
 		UserInput input = new Input();
 		String message = "Entrez un operende, une operation ou bien tapez exit pour quitter";
+		String currentExpression = "";
 		display.showMessage(message);
+		while(true) {
 		String value = input.readValue();
-        if (isOperator(value)) {
-        	moteur.calcul(value);
+        if (moteur.isOperator(value)) {
+        	
+        	currentExpression += " "+value;
+			display.showMessage("L'expression courante"+currentExpression);
+        	double result = moteur.calcul(value);
+        	message = "Result " + result;
+        	display.showMessage(message);
+             
+        }else {
+        	if(value.equals("exit") || value.equals("undo")) {
+        		
+        		moteur.interprete(value);
+        	}else {
+        		try{
+        			double a = Double.parseDouble(value);
+        			moteur.save(a);
+        			currentExpression += " "+value;
+        			display.showMessage("L'expression courante"+currentExpression);
+        		} catch(NumberFormatException e)
+        		{
+        			message = "Errer ! Entrez un operande, une operation ou exit pour exit ou undo ";
+        			display.showMessage(message);
+        		}
+        	}
         }
-	}
-
-
-
-	// Check if a given string is an operator or not
-	/**
-	 * 
-	 * @param symbol = Operation symbol
-	 * @return True if the given symbol is a an operation symbol.
-	 * @throws OperationException when the given symbol is not a an operation
-	 *                            symbol.
-	 */
-	public boolean isOperator(String symbol) throws OperationException {
-
-		boolean isOperation = Pattern.compile("[+-/*]").matcher(symbol).matches();
-		if (isOperation) {
-			return isOperation;
-		} else {
-			throw new OperationException();
 		}
-
 	}
+
 	
 }
