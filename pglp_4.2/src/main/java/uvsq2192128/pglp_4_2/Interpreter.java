@@ -1,11 +1,13 @@
 package uvsq2192128.pglp_4_2;
 
+import java.util.Stack;
+
 public class Interpreter {
    
 	// this class has the two classes of quit and undo
-	
-	public Interpreter() {
-		// TODO Auto-generated constructor stub
+	private Stack<Double> stack;
+	public Interpreter(final Stack<Double> stackArg) {
+		this.stack = stackArg;
 	}
 	
 	
