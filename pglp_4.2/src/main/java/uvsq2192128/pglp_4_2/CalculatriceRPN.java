@@ -4,16 +4,21 @@ package uvsq2192128.pglp_4_2;
 public enum CalculatriceRPN {
 	MAINPROGRAM;
 
-	public void execute() throws OperationException, MiniMumOperandNeeded {
+	public void execute() throws OperationException, MiniMumOperandNeeded, DivisionByZero {
 		SaisieRPN saisieInterection = new SaisieRPN();
 
 		saisieInterection.interectUserInput();
 	
 	}
 
-	public static void main(String[] args) throws OperationException, MiniMumOperandNeeded {
+	public static void main(String[] args){
 
-		CalculatriceRPN.MAINPROGRAM.execute();
+		try {
+			CalculatriceRPN.MAINPROGRAM.execute();
+		} catch (OperationException | MiniMumOperandNeeded | DivisionByZero e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

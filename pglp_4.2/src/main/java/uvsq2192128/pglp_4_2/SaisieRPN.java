@@ -8,16 +8,17 @@ public class SaisieRPN {
 	
 	
 	private Stack<Double> stack;
+	private Stack<Double> history;
 	private MoteurRPN moteur;
-	private Interpreter interpreter; 
+
 	public SaisieRPN() {
 	    stack = new Stack<Double>();
-	    moteur = new MoteurRPN(stack);
-	    interpreter = new Interpreter(stack);
+	    history = new Stack<Double>();
+	    moteur = new MoteurRPN(stack, history);
 	}
    
 	
-	public void interectUserInput() throws OperationException, MiniMumOperandNeeded {
+	public void interectUserInput() throws OperationException, MiniMumOperandNeeded, DivisionByZero {
 		UserDisplay display = new Display();
 		UserInput input = new Input();
 		String message = "Entrez un operende, une operation ou bien tapez exit pour quitter";
@@ -35,8 +36,15 @@ public class SaisieRPN {
              
         }else {
         	if(value.equals("exit") || value.equals("undo")) {
-        		
         		moteur.interprete(value);
+        		if (value.equals("undo")){
+        			if (currentExpression.length() > 2) {
+        			currentExpression = currentExpression.substring(0,currentExpression.length()-2);
+        			display.showMessage("L'expression courante"+currentExpression);
+        			}else {
+        			display.showMessage("L'expression courante: vide");
+        			}
+        		}
         	}else {
         		try{
         			double a = Double.parseDouble(value);

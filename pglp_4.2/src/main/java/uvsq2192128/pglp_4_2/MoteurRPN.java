@@ -1,5 +1,7 @@
 package uvsq2192128.pglp_4_2;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
@@ -7,9 +9,19 @@ public class MoteurRPN extends Interpreter{
     //this one has the classes of addition, substraction....
 	
 	private Stack<Double> stack;
-	public MoteurRPN(final Stack<Double> stackArg) {
-		super(stackArg);
+	private Stack<Double> history;
+	private Map<String, SpecificCommand> commands;
+	public MoteurRPN(final Stack<Double> stackArg, final Stack<Double> historyArg) {
+		
+		super(stackArg,historyArg);
+		commands = new HashMap<String, SpecificCommand>();
+		commands.put("+", new Addition());
+		commands.put("*", new Multiplication());
+		commands.put("-", new Substraction());
+		commands.put("/", new Division());
+
 		stack = stackArg;
+		history = historyArg;
 	}
 	
 	public void save(double operand) {
@@ -23,39 +35,19 @@ public class MoteurRPN extends Interpreter{
 		}
 		return values;
 	}
-	public double calcul(String operation) throws MiniMumOperandNeeded {
-
-		SpecificCommand op = null;
+	public double calcul(String operation) throws MiniMumOperandNeeded, DivisionByZero {
 		
-		switch (operation) {
-		case "+":
-			op = new Addition();
-			break;
-		case "*":
-			op = new Multiplication();
-			break;
-		case "/":
-			
-			op = new Division();
-			break;
-		case "-":
-		   op = new Substraction();
-		   break;
-		default :
-			break;
-		}
-		
-		return this.eval(op);
+		return this.eval(this.commands.get(operation));
 	}
 	
 	
-	private double eval(final SpecificCommand operation) throws MiniMumOperandNeeded {
+	private double eval(final SpecificCommand operation) throws MiniMumOperandNeeded, DivisionByZero {
 		if (stack.size() >= 2) {
 			double a =stack.pop();
 			double b =stack.pop();
-			System.out.println(a+" "+b);
+			history.push(a);
+			history.push(b);
 			stack.push(operation.apply(a,b));
-			System.out.println(operation.apply(a,b));
 			return stack.peek();
 		} else {
 			throw new MiniMumOperandNeeded();
@@ -105,7 +97,14 @@ public class MoteurRPN extends Interpreter{
 		}
 
 		public double apply(double a, double b) {
-			return a/b;
+			if (b == 0)
+				try {
+					throw new DivisionByZero();
+				} catch (DivisionByZero e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			return a / b;
 			
 			
 		}

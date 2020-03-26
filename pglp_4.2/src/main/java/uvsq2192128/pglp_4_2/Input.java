@@ -7,7 +7,9 @@ public class Input implements UserInput {
 	public String readValue() {
 		// TODO Auto-generated method stub
 		Scanner sc = new Scanner(System.in);
-	    return sc.nextLine();
+	    String s = sc.nextLine();
+	 
+	    return s.replace("\n", "").replace("\r", "");
 	}
 	
 }
