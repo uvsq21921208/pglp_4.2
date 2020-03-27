@@ -1,5 +1,6 @@
 package uvsq2192128.pglp_4_2;
 
+import java.util.Arrays;
 import java.util.Stack;
 
 public class SaisieRPN {
@@ -18,7 +19,7 @@ public class SaisieRPN {
 	}
    
 	
-	public void interectUserInput() throws OperationException, MiniMumOperandNeeded, DivisionByZero {
+	public void interectUserInput() {
 		UserDisplay display = new Display();
 		UserInput input = new Input();
 		String message = "Entrez un operende, une operation ou bien tapez exit pour quitter";
@@ -28,11 +29,25 @@ public class SaisieRPN {
 		String value = input.readValue();
         if (moteur.isOperator(value)) {
         	
-        	currentExpression += " "+value;
-			display.showMessage("L'expression courante"+currentExpression);
-        	double result = moteur.calcul(value);
-        	message = "Result " + result;
-        	display.showMessage(message);
+        	
+			
+        	double result;
+			try {
+				result = moteur.calcul(value);
+				message = "Result " + result;
+				currentExpression += " "+value;
+				display.showMessage("L'expression courante"+currentExpression);
+	        	display.showMessage(message);
+			} catch (MiniMumOperandNeeded e) {
+				message = "You need atleast two operandes !";
+				display.showMessage(message);
+			} catch (DivisionByZero e) {
+				message = "You cannot divide by zero !";
+				display.showMessage(message);
+				display.showMessage(Arrays.toString(moteur.getListOfOperandes()));
+				
+			}
+        	
              
         }else {
         	if(value.equals("exit") || value.equals("undo")) {
@@ -49,6 +64,7 @@ public class SaisieRPN {
         		try{
         			double a = Double.parseDouble(value);
         			moteur.save(a);
+        			display.showMessage(Arrays.toString(moteur.getListOfOperandes()));
         			currentExpression += " "+value;
         			display.showMessage("L'expression courante"+currentExpression);
         		} catch(NumberFormatException e)

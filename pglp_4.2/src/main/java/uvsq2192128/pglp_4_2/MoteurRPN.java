@@ -18,7 +18,7 @@ public class MoteurRPN extends Interpreter{
 		commands.put("+", new Addition());
 		commands.put("*", new Multiplication());
 		commands.put("-", new Substraction());
-		commands.put("/", new Division());
+		commands.put("/", new Division(stack));
 
 		stack = stackArg;
 		history = historyArg;
@@ -92,20 +92,20 @@ public class MoteurRPN extends Interpreter{
 	}
 	private class Division implements SpecificCommand{
 
-		public Division() {
+		public Division(Stack<Double> stack) {
 			// TODO Auto-generated constructor stub
 		}
 
-		public double apply(double a, double b) {
-			if (b == 0)
-				try {
-					throw new DivisionByZero();
-				} catch (DivisionByZero e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			return a / b;
-			
+		public double apply(double a, double b) throws DivisionByZero {
+			if (a != 0) {
+			   return  b / a;
+			     
+			}
+			else {
+			   stack.push(b);
+			   stack.push(a);
+			   throw new DivisionByZero();
+			}
 			
 		}
 
@@ -121,7 +121,7 @@ public class MoteurRPN extends Interpreter{
 	 * @throws OperationException when the given symbol is not a an operation
 	 *                            symbol.
 	 */
-	public boolean isOperator(String symbol) throws OperationException {
+	public boolean isOperator(String symbol) {
 
 		boolean isOperation = Pattern.compile("[+-/*]").matcher(symbol).matches();
 		if (isOperation) {
