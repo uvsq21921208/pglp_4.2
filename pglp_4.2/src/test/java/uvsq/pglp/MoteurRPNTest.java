@@ -1,6 +1,7 @@
-package uvsq2192128.pglp_4_2;
+package uvsq.pglp;
 
-import static org.junit.Assert.assertArrayEquals;
+
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -12,8 +13,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import uvsq.pglp.DivisionByZero;
+import uvsq.pglp.MiniMumOperandNeeded;
+import uvsq.pglp.MoteurRPn;
+
 public class MoteurRPNTest {
-	private MoteurRPN moteur;
+	private MoteurRPn moteur;
 	private Stack<Double> stack;
 	private Stack<Double> history;
 	@Rule
@@ -24,7 +29,7 @@ public class MoteurRPNTest {
 	public void setUp() {
 		stack = new Stack<Double>();
 		history = new Stack<Double>();
-		moteur = new MoteurRPN(stack, history);
+		moteur = new MoteurRPn(stack, history);
 	}
 
 	@Test
