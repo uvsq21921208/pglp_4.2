@@ -7,9 +7,8 @@ public class Input implements UserInput {
   *@return user input.
   */
   public String readValue() {
-    Scanner sc = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in, "UTF-8");
     String s = sc.nextLine();
-    sc.close();
     return s.replace("\n", "").replace("\r", "");
   }
 

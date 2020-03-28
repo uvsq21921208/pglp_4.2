@@ -12,14 +12,23 @@ public class MoteurRPn extends Interpreter {
   /**
   * stack of operandes.
   */
-  private Stack<Double> stack;
+  private static Stack<Double> stack;
   /**
   * history of operandes (stack).
   */
   private Stack<Double> history;
   /**
+   * setter to initilialize stack.
+   * @param stackArg stack of operandes.
+   */
+
+  private synchronized void setStack(final Stack<Double> stackArg) {
+    stack = stackArg;
+  }
+  /**
   * map a specific command with its string representation.
   */
+  
   private Map<String, SpecificCommand> commands;
   /**
   * Public constructor.
@@ -30,13 +39,14 @@ public class MoteurRPn extends Interpreter {
   public MoteurRPn(final Stack<Double> stackArg,
       final Stack<Double> historyArg) {
     super(stackArg, historyArg);
+    setStack(stackArg);
+    history = historyArg;
     commands = new HashMap<String, SpecificCommand>();
     commands.put("+", new Addition());
     commands.put("*", new Multiplication());
     commands.put("-", new Substraction());
     commands.put("/", new Division(stack));
-    stack = stackArg;
-    history = historyArg;
+ 
   }
   /**
   * method to save an operande.
@@ -96,7 +106,7 @@ public class MoteurRPn extends Interpreter {
   * Substraction class.
   */
     
-  private class Substraction implements SpecificCommand {
+  private static class Substraction implements SpecificCommand {
     Substraction() { }
 
     /** Apply.
@@ -113,7 +123,7 @@ public class MoteurRPn extends Interpreter {
   * Addition class.
   */
 
-  private class Addition implements SpecificCommand {
+  private static class Addition implements SpecificCommand {
 
     Addition() { }
     /**
@@ -132,7 +142,7 @@ public class MoteurRPn extends Interpreter {
   * Multiplication class.
   */
 
-  private class Multiplication implements SpecificCommand {
+  private static class Multiplication implements SpecificCommand {
 
     Multiplication() { }
     /** Apply.
@@ -146,7 +156,7 @@ public class MoteurRPn extends Interpreter {
     }
   }
 
-  private class Division implements SpecificCommand {
+  private static class Division implements SpecificCommand {
     /**
     * Public constructor.
     * @param stackarg stack reference.

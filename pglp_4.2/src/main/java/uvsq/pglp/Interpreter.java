@@ -34,14 +34,14 @@ public class Interpreter {
 
   }
 
-  private class Quit implements GenericCommand {
+  private static class Quit implements GenericCommand {
     /**
     * execute method implementation.
     */
     public void execute() {
       Display display = new Display();
       display.showMessage("You are quiting!");
-      System.exit(0);
+      return;
     }
 
   }
@@ -49,7 +49,7 @@ public class Interpreter {
   * Undo class.
   */
 
-  private class Undo implements GenericCommand {
+  private static class Undo implements GenericCommand {
     /**
     * stack of operandes.
     */

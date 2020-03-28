@@ -32,7 +32,7 @@ public class SaisieRPn {
   /**
   * user interaction.
   */
-  
+
   public void interectUserInput() {
     UserDisplay display = new Display();
     UserInput input = new Input();
@@ -75,13 +75,13 @@ public class SaisieRPn {
               display.showMessage(
                   "L'expression courante: vide");
             }
+          } else {
+            return;
           }
         } else {
           try {
             double a = Double.parseDouble(value);
             moteur.save(a);
-            display.showMessage(
-                 Arrays.toString(moteur.getListOfOperandes()));
             currentExpression += " " + value;
             display.showMessage(
                  "L'expression courante" + currentExpression);
