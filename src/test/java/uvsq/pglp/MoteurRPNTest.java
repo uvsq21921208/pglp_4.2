@@ -3,6 +3,7 @@ package uvsq.pglp;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -21,11 +22,11 @@ public class MoteurRPNTest {
 	private MoteurRPn moteur;
 	private Stack<Double> stack;
 	private Stack<Double> history;
+	
 	@Rule
 	public ExpectedException exceptionRule = ExpectedException.none();
 
 	@Before
-
 	public void setUp() {
 		stack = new Stack<Double>();
 		history = new Stack<Double>();
@@ -44,19 +45,23 @@ public class MoteurRPNTest {
 		operation = "*";
 		assertTrue(moteur.isOperator(operation));
 		operation = "azeazeaze+";
-	
-	
-
+		assertFalse(moteur.isOperator(operation));
 	}
+	
+	@Test 
+	public void miniMumOperandNeededTest() throws MiniMumOperandNeeded, DivisionByZero {
+		exceptionRule.expect(MiniMumOperandNeeded.class);
+		moteur.calcul("+");
+	}
+	
 	@Test
 	public void calculTest() throws MiniMumOperandNeeded, DivisionByZero {
 		double x = 5;
 		double y = 7;
 		moteur.save(x);
 		moteur.save(y);
-		
-		assertEquals(moteur.calcul("+"), 12, 0);
 	}
+	
 	@Test
 	public void calculTestDivisionByZeroExceptionTest() throws MiniMumOperandNeeded, DivisionByZero {
 		double x = 5;
@@ -66,8 +71,9 @@ public class MoteurRPNTest {
 		exceptionRule.expect(DivisionByZero.class);
 		moteur.calcul("/");
 	}
+	
     @Test 
-    public void undoExitTest() throws MiniMumOperandNeeded, DivisionByZero {
+    public void undoTest() throws MiniMumOperandNeeded, DivisionByZero {
     	double x = 5;
 		double y = 2;
 		
@@ -78,5 +84,13 @@ public class MoteurRPNTest {
 		double [] operandes = moteur.getListOfOperandes();
 		double [] expectedOperandes = {5,2};
 	    assertEquals(Arrays.toString(operandes), Arrays.toString(expectedOperandes));
+    }
+    
+    @Test  
+    public void undoEmpty() {
+    	// Trying to make undo in an empty stack produces no error.
+    	double [] a = {};
+    	assertEquals(Arrays.toString(moteur.getListOfOperandes()), Arrays.toString(a));
+    	moteur.interprete("undo");
     }
 }
